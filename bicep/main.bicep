@@ -100,7 +100,7 @@ module computeModule './compute.bicep' = {
     location: location
     prefix: prefix
     keyVaultName: keyVaultModule.outputs.keyVaultName
-    appInsightsInstrumentationKey: sharedModule.outputs.appInsightsInstrumentationKey
+    appInsightsConnectionString: sharedModule.outputs.appInsightsConnectionString
     subnetAppServicesId: networkModule.outputs.subnetAppServicesId
     storageAccountName: storageModule.outputs.storageAccountName
     storageKeyVaultSecretUri: storageModule.outputs.connectionStringKeyVaultUri  
@@ -143,7 +143,7 @@ module apimModule './apim.bicep' = {
     publicIpAddressId: networkModule.outputs.apimIpAddressId
     appInsightsName: sharedModule.outputs.appInsightsName
     appInsightsId: sharedModule.outputs.appInsightsId
-    appInsightsInstrumentationKey: sharedModule.outputs.appInsightsInstrumentationKey
+    appInsightsConnectionString: sharedModule.outputs.appInsightsConnectionString
     functionName: computeModule.outputs.applicationName
     functionId: computeModule.outputs.applicationId
     functionKey: computeModule.outputs.applicationKey
@@ -177,11 +177,3 @@ module appGwModule './app-gateway.bicep' = {
     primaryBackendEndFQDN: apimModule.outputs.FQDN
   }
 }
-
-// module keyVaultAccessPolicyModule './keyVaultAccessPolicy.bicep' = if (deployFunction) { 
-//   name: 'keyVaultAccessPolicyModule'
-//   params: {
-//     keyVaultName: keyVaultModule.outputs.keyVaultName
-//     applicationId: functionModule.outputs.applicationId
-//   }
-// }

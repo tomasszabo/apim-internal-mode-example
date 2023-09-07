@@ -2,7 +2,7 @@
 param location string
 param prefix string
 param keyVaultName string
-param appInsightsInstrumentationKey string
+param appInsightsConnectionString string
 param subnetAppServicesId string
 param storageAccountName string
 param storageKeyVaultSecretUri string
@@ -50,36 +50,6 @@ resource functionApp 'Microsoft.Web/sites@2022-09-01' = {
   properties: {
     serverFarmId: hostingPlan.id
     siteConfig: {
-      // appSettings: [
-      //   {
-      //     name: 'AzureWebJobsStorage'
-      //     value: 'DefaultEndpointsProtocol=https;AccountName=${storageAccountName};EndpointSuffix=${environment().suffixes.storage};AccountKey=${storageAccount.listKeys().keys[0].value}'
-      //   }
-      //   {
-      //     name: 'WEBSITE_CONTENTAZUREFILECONNECTIONSTRING'
-      //     value: 'DefaultEndpointsProtocol=https;AccountName=${storageAccountName};EndpointSuffix=${environment().suffixes.storage};AccountKey=${storageAccount.listKeys().keys[0].value}'
-      //   }
-      //   {
-      //     name: 'WEBSITE_CONTENTSHARE'
-      //     value: toLower(functionAppName)
-      //   }
-      //   {
-      //     name: 'WEBSITE_CONTENTOVERVNET'
-      //     value: '1'
-      //   }
-      //   {
-      //     name: 'FUNCTIONS_EXTENSION_VERSION'
-      //     value: '~4'
-      //   }
-      //   {
-      //     name: 'APPINSIGHTS_INSTRUMENTATIONKEY'
-      //     value: appInsightsInstrumentationKey
-      //   }
-      //   {
-      //     name: 'FUNCTIONS_WORKER_RUNTIME'
-      //     value: 'dotnet'
-      //   }
-      // ]
       cors: {
         allowedOrigins: [
           '*'
@@ -118,7 +88,7 @@ resource logicAppSettings 'Microsoft.Web/sites/config@2022-09-01' = {
     WEBSITE_CONTENTSHARE: toLower(functionAppName)
     WEBSITE_CONTENTOVERVNET: '1'
     FUNCTIONS_EXTENSION_VERSION: '~4'
-    APPLICATIONINSIGHTS_CONNECTION_STRING: appInsightsInstrumentationKey
+    APPLICATIONINSIGHTS_CONNECTION_STRING: appInsightsConnectionString
     FUNCTIONS_WORKER_RUNTIME: 'dotnet'
   }
 }
@@ -126,6 +96,9 @@ resource logicAppSettings 'Microsoft.Web/sites/config@2022-09-01' = {
 resource function 'Microsoft.Web/sites/functions@2022-09-01' = {
   name: functionName
   parent: functionApp
+  dependsOn: [
+    logicAppSettings
+  ]
   properties: {
     config: {
       disabled: false

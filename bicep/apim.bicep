@@ -6,7 +6,7 @@ param subnetApimId string
 param publicIpAddressId string
 param appInsightsName string
 param appInsightsId string
-param appInsightsInstrumentationKey string
+param appInsightsConnectionString string
 param functionName string
 param functionId string
 param functionKey string
@@ -174,7 +174,7 @@ resource apimAppInsightsLogger 'Microsoft.ApiManagement/service/loggers@2023-03-
     loggerType: 'applicationInsights'
     resourceId: appInsightsId
     credentials: {
-      instrumentationKey: appInsightsInstrumentationKey
+      connectionString: appInsightsConnectionString
     }
   }
 }
